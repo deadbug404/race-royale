@@ -1,12 +1,14 @@
 class Board{
     #length;
+    #boardSize;
 
     constructor(length){
         this.#length = length;
+        this.#boardSize = Math.ceil(this.#length/2);
     }
 
     isValidNeighbor(x,y,grid){
-        if(x < 0 || y < 0 || x > this.#length-1 || y > this.#length-1 || grid[x][y] != 0){
+        if(x < 0 || y < 0 || x > this.#boardSize-1 || y > this.#boardSize-1 || grid[x][y] != 0){
             return false;
         }
         return true;
@@ -36,21 +38,19 @@ class Board{
     }
 
     createGrid(){
-        return Array.from({length:this.#length}, ()=>
-            Array.from({length:this.#length}, ()=> 0 )
+        return Array.from({length:this.#boardSize}, ()=>
+            Array.from({length:this.#boardSize}, ()=> 0 )
         )
     }
 
     randomlyGenerate(){
         let grid = this.createGrid();
-
-        let currentX = this.#length-1;
+        let currentX = this.#boardSize-1;
         let currentY = 0;
         let currentStep = 1;
 
         grid[currentX][currentY] = currentStep;
-
-        while(currentStep <= this.#length){
+        while(currentStep < this.#length){
             try{
                 console.log(`${currentStep}: x${currentX} y${currentY}`);
                 let [dx,dy] = this.chooseRandomValidNeighbor(currentX,currentY,grid);
@@ -59,15 +59,17 @@ class Board{
                 grid[dx][dy] = currentStep;
                 currentX = dx;
                 currentY = dy;
-            }catch(err){ // outside of the border
-                console.log("Not long enough regenerating");
+            }catch(err){ //instance where theres no valid neighbor
                 grid = this.createGrid();
-                currentX = this.#length-1;
+                currentX = this.#boardSize-1;
                 currentY = 0;
                 currentStep = 1;
                 grid[currentX][currentY] = currentStep;
             }
         }
+
+        
+
         return grid;
     }
 }
