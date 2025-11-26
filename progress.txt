@@ -1,0 +1,24 @@
+Player 
+- Has Hp
+- Has mana
+- Has character
+- Has inventory
+- Can take damage
+- Can reduce mana
+- Return hp value
+- Return mana value
+- Return inventory
+
+Dice
+- Has Color
+- Can roll number 1-6
+
+Board
+- Has length of tiles
+- Has total area of the board (board size)
+- Can generate a board with randomly positioned tiles
+
+Done
+- Remove unnecessary indexes from the array once the path is generated
+
+To do

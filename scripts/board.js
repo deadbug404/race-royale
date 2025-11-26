@@ -39,8 +39,15 @@ class Board{
 
     createGrid(){
         return Array.from({length:this.#boardSize}, ()=>
-            Array.from({length:this.#boardSize}, ()=> 0 )
+            Array.from({length:this.#boardSize}, () => 0 )
         )
+    }
+
+    removeExcessTiles(grid,lowestHeightIndex,highestWidthIndex){
+        grid.splice(0,lowestHeightIndex);
+        grid.forEach(row => {
+            row.splice(highestWidthIndex+1);
+        })
     }
 
     randomlyGenerate(){
@@ -48,15 +55,18 @@ class Board{
         let currentX = this.#boardSize-1;
         let currentY = 0;
         let currentStep = 1;
+        let highestWidthIndex = 0;
+        let lowestHeightIndex = currentX;
 
-        grid[currentX][currentY] = currentStep;
+        grid[currentX][currentY] = {tile:currentStep, contains:[]};
         while(currentStep < this.#length){
             try{
                 console.log(`${currentStep}: x${currentX} y${currentY}`);
                 let [dx,dy] = this.chooseRandomValidNeighbor(currentX,currentY,grid);
-
+                if(dy > highestWidthIndex){highestWidthIndex = dy};
+                if(dx < lowestHeightIndex){lowestHeightIndex = dx};
                 currentStep += 1;
-                grid[dx][dy] = currentStep;
+                grid[dx][dy] = {tile:currentStep, contains:[]};
                 currentX = dx;
                 currentY = dy;
             }catch(err){ //instance where theres no valid neighbor
@@ -64,12 +74,13 @@ class Board{
                 currentX = this.#boardSize-1;
                 currentY = 0;
                 currentStep = 1;
-                grid[currentX][currentY] = currentStep;
+                lowestHeightIndex = currentX;
+                highestWidthIndex = 0;
+                grid[currentX][currentY] = {tile: currentStep, contains:[]};
             }
         }
-
         
-
+        this.removeExcessTiles(grid,lowestHeightIndex,highestWidthIndex);
         return grid;
     }
 }
